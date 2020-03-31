@@ -13,7 +13,7 @@ function setup() {
     frameRate(FPS);
     createCanvas(windowWidth, windowHeight);
     for (let i = 0; i < 10; i++) {
-        planets.push(new Planet(random(2), 0, random(-0.15, 0.15), random(-0.015, 0.015), random(3, 15), random(1, 4), random(- 500, width + 500), random(-500, height + 500)));
+        planets.push(new Planet(random(2), 0, random(-0.15, 0.15), random(-0.015, 0.015), random(3, 15), random(1, 4), random(width), random(height)));
     }
     stars.push(new Star(width / 2, height / 2, 30, 60));
     updateMassSlider();
@@ -42,6 +42,7 @@ function draw() {
                     planets.splice(planets.indexOf(planets[i]), 1);
                     removed = true;
                     --i;
+                    document.getElementById("planetsAmount").innerHTML = `Planets Count ${planets.length}`;
                 }
             }
             /*Add that vector to the planet's acceleration and set the magnitute to something smaller. So it's not a giant vector going from planet to sun*/
@@ -56,7 +57,10 @@ function draw() {
                             planets[i].vel.add(planets[j].vel.mult(0.7)); //Add the velocity of the destroyed planet to the impact planet
                             planets.splice(planets.indexOf(planets[j]), 1); //Remove smaller planet
                             removed = true;
+                            document.getElementById("planetsAmount").innerHTML = `Planets Count ${planets.length}`;
+                            console.log("Removed");
                             --i;
+                            
                             break;
                         }
                     }
@@ -111,7 +115,7 @@ function updatePlanetsSlider() {
     let planetsToAdd = document.getElementById("planetsSlider").value - planets.length; //Get difference between current planets and added planets 
     if (planetsToAdd > 0) { //Have to loop because the update doesn't trigger the event listener every single increment or decrement
         for (let i = 0; i < planetsToAdd; i++) { //If planets to add difference is positive, add these many new planets
-            planets.push(new Planet(random(2), 0, random(-0.15, 0.15), random(-0.015, 0.015), random(3, 15), random(1, 4), random(- 500, width + 500), random(-500, height + 500)));
+            planets.push(new Planet(random(2), 0, random(-0.15, 0.15), random(-0.015, 0.015), random(3, 15), random(1, 4), random(width), random(height)));
         }
     } else if (planetsToAdd < 0) { //If planets removed, go to the position where "added planets" are, and remove to end
         planets.splice(planets.length - 1 - Math.abs(planetsToAdd), Math.abs(planetsToAdd)); //
