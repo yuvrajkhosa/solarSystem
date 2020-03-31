@@ -5,37 +5,30 @@ let removed = false;
 const PLANET_DISTANCE_CONSTRAINTS = [2, 25];
 const STAR_DISTANCE_CONSTRAINTS = [7, 20];
 const FPS = 60;
+let counter = 0;
+let isStarted = false;
+let initialPlanets = 0;
 
 function setup() {
     frameRate(FPS);
     createCanvas(windowWidth, windowHeight);
-    // for(let i = 0; i < 10; i++){
-    //   planets.push(new Planet(random(2), 35 + i * 60, random(-0.03, 0.03), random(-0.03, 0.03), random(1, 20), random(1,4)))//Making some random planets
-    // }
-    // for(let i = 0; i < 10; i++){
-    //   planets.push(new Planet(random(2), -35 - i * 60, random(-0.03, 0.03), random(-0.03, 0.03), random(1, 20), random(1,4)))//Making random planets below star
-    // }
     for (let i = 0; i < 10; i++) {
-        planets.push(new Planet(random(2), 0, random(-0.1, 0.1), random(-0.01, 0.01), random(3, 15), random(1, 4), random(width), random(height)));
+        planets.push(new Planet(random(2), 0, random(-0.15, 0.15), random(-0.015, 0.015), random(3, 15), random(1, 4), random(- 500, width + 500), random(-500, height + 500)));
     }
     stars.push(new Star(width / 2, height / 2, 30, 60));
-    
-
+    updateMassSlider();
+    updatePlanetsSlider();
 }
 
 function draw() {
     background(220);
     fill(0);
-    text(planets.length, 10, 20);
-
-
-
     for (let i = 0; i < stars.length; i++) {
         fill(255, 255, 0);
         ellipse(stars[i].pos.x, stars[i].pos.y, stars[i].diam);
     }
     for (let i = 0; i < planets.length; i++) { //Go through each planet
-        if (frameCount > planets[i].timeForAccel * FPS) { //If time has passed the planets' time argument
+        if (counter > planets[i].timeForAccel * FPS && isStarted) { //If time has passed the planets' time argument
             //accel.add(mouseForce.setMag(0.1));
             for (let j = 0; j < stars.length; j++) {
                 gravityForce = stars[j].pos.copy().sub(planets[i].pos); //Start applying gravity. Get vector pointing from current planet to sun
@@ -51,12 +44,8 @@ function draw() {
                     --i;
                 }
             }
-
-
-
-
             /*Add that vector to the planet's acceleration and set the magnitute to something smaller. So it's not a giant vector going from planet to sun*/
-            if (!removed) {
+            if (!removed && isStarted) {
                 for (j in planets) { //Cycle through the other planets to create a force of gravity between the planets.
                     if (i == j) { //If same planet, continue
                         continue;
@@ -81,46 +70,57 @@ function draw() {
                 }
             }
         } else {
-            planets[i].accel.add(planets[i].initAccel);
+            if (isStarted) {
+                planets[i].accel.add(planets[i].initAccel);
+            }
         }
         if (!removed) {
             planets[i].vel.add(planets[i].accel); //Add the net acceleration to the velocity of the current planet
             planets[i].pos.add(planets[i].vel); //Add that velocity to the position
             fill(planets[i].colour);
             ellipse(planets[i].pos.x, planets[i].pos.y, planets[i].diam); //Draw planet at current position
-
             planets[i].accel.mult(0); //Set net acceleration force to 0
         }
-
         removed = false;
-
     }
-    // This made bouncing ball
-    // if(pos.x > width - diam / 2){
-    //   pos.x = width - diam / 2;
-    //   vel.mult(0);
-    //   ballAccel.x *= -1;
+    counter++;
+}
 
-    // }
-    // else if(pos.x < diam / 2){
-    //   pos.x = diam /2;
-    //   vel.mult(0);
-    //   ballAccel.x *= -1;
-    // }
-    // if(pos.y < diam / 2){
-    //   pos.y = diam / 2;
-    //   vel.mult(0);
-    //   ballAccel.y *= -1;
-    // }
-    // else if(pos.y > height - diam / 2){
-    //   pos.y = height - diam / 2;
-    //   vel.mult(0);
-    //   ballAccel.y *= -1;
-    // }
+function start() { //Start simulation
+    if (!isStarted) {
+        isStarted = true;
+        counter = 0;
+        initialPlanets = planets.length;
+    }
+}
 
+function restart() { //Remove all planets add the default planets
+    isStarted = false;
+    planets = [];
+    updatePlanetsSlider();
+}
+document.getElementById("massSlider").addEventListener('input', updateMassSlider, false); //On update, run updateMassSlider();
+document.getElementById("planetsSlider").addEventListener('input', updatePlanetsSlider, false); //On update, run updatePlanetsSlider();
 
-    // //prevAccel = accel.copy();
+function updatePlanetsSlider() {
+    if (isStarted) { //If simulation is started, do not allow to move slider
+        document.getElementById("planetsSlider").value = initialPlanets;
+        return;
+    }
+    document.getElementById("planetsAmount").innerHTML = `Planets Count: ${document.getElementById("planetsSlider").value}`; //Update Text
+    let planetsToAdd = document.getElementById("planetsSlider").value - planets.length; //Get difference between current planets and added planets 
+    if (planetsToAdd > 0) { //Have to loop because the update doesn't trigger the event listener every single increment or decrement
+        for (let i = 0; i < planetsToAdd; i++) { //If planets to add difference is positive, add these many new planets
+            planets.push(new Planet(random(2), 0, random(-0.15, 0.15), random(-0.015, 0.015), random(3, 15), random(1, 4), random(- 500, width + 500), random(-500, height + 500)));
+        }
+    } else if (planetsToAdd < 0) { //If planets removed, go to the position where "added planets" are, and remove to end
+        planets.splice(planets.length - 1 - Math.abs(planetsToAdd), Math.abs(planetsToAdd)); //
+    }
+}
 
-
-    // accel.mult(0);
+function updateMassSlider() {
+    document.getElementById("starMass").innerHTML = `Star Mass: ${document.getElementById("massSlider").value}`;
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].mass = document.getElementById("massSlider").value;
+    }
 }

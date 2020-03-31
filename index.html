@@ -3,9 +3,66 @@
     <script src="p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
-
+  <style>
+    .massSliderDiv{
+      position: absolute;
+      top: 3%;
+      display: flex;
+      flex-direction: row;
+      width: 468px;
+      flex-wrap: wrap;
+      opacity: 0.9;
+      
+    }
+    .planetsText{
+      font-family: Arial, Helvetica, sans-serif;
+      margin-top: 5px;
+      padding-top: 0px;
+      border-top: 0px;
+      font-size: 18px;
+    }
+    .slider{
+      width: 300px;
+      height: 25px;
+      -webkit-appearance: none;
+      appearance: none;
+      outline: none;
+      background: #98b8ec;
+      border-radius: 15px;
+      box-shadow: 5px 10px 10px;
+    }
+    .slider::-webkit-slider-thumb{
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      background: #ce9cff;
+      cursor: pointer;
+      border-radius: 50%;
+     }
+     button{
+       margin-left: 5px;
+       width: 60px;
+       height: 30px;
+       border-radius: 10px;
+       border: none;
+       outline: none;
+     }
+     button:hover{
+        background: #a3a3a3;
+     }
+  </style>
   </head>
   <body>
+    <div class="massSliderDiv">
+      <input class="slider" id="massSlider" type="range" min="1" max="1000" value="50">
+      <h1 id="starMass" class="planetsText"></h1>
+      <input class="slider" id="planetsSlider" type="range" min="1" max="200" value="10">
+      <h1 id="planetsAmount" class="planetsText"></h1>
+      <button onclick="start();">Start</button>
+      <button onclick="restart();">Restart</button>
+    </div>
+    
     <script src="planet.js"></script>
     <script src="star.js"></script>
     <script src="sketch.js"></script>

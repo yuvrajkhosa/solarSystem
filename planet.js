@@ -9,5 +9,4 @@ class Planet{
         this.vel = createVector(0,0);
         this.colour = [random(255), random(255), random(255)];
     }
-
 }
