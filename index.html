@@ -4,6 +4,15 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
   <style>
+    :root{
+      --textColor: #000000; 
+      --invertPercent: 0%;
+      --sliderColor: #98b8ec;
+      --sliderThumbColor: #ce9cff;
+
+      
+      
+    }
     .massSliderDiv{
       position: absolute;
       top: 3%;
@@ -20,6 +29,7 @@
       padding-top: 0px;
       border-top: 0px;
       font-size: 18px;
+      color: var(--textColor);
     }
     .slider{
       width: 300px;
@@ -27,16 +37,16 @@
       -webkit-appearance: none;
       appearance: none;
       outline: none;
-      background: #98b8ec;
+      background: var(--sliderColor);
       border-radius: 15px;
-      box-shadow: 5px 10px 10px;
+     
     }
     .slider::-webkit-slider-thumb{
       -webkit-appearance: none;
       appearance: none;
       width: 25px;
       height: 25px;
-      background: #ce9cff;
+      background: var(--sliderThumbColor);
       cursor: pointer;
       border-radius: 50%;
      }
@@ -51,6 +61,23 @@
      button:hover{
         background: #a3a3a3;
      }
+     .contrastIcon{
+       position: absolute;
+       width: 50px;
+       bottom: 1%;
+       left: 1%;
+       opacity: 0.5;
+       filter: invert(var(--invertPercent));
+       -webkit-filter: invert(var(--invertPercent));
+       transition: width 0.5s;
+       
+     }
+     .contrastIcon:hover{
+       width: 54px;
+       opacity: 1;
+       cursor: pointer;
+
+     }
   </style>
   </head>
   <body>
@@ -63,7 +90,7 @@
       <button onclick="start();">Start</button>
       <button onclick="restart();">Restart</button>
     </div>
-    
+    <img class="contrastIcon" src="contrast.png" onclick="toggleDark();">
     <script src="planet.js"></script>
     <script src="star.js"></script>
     <script src="sketch.js"></script>

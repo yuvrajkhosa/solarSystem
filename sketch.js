@@ -8,6 +8,8 @@ const FPS = 60;
 let counter = 0;
 let isStarted = false;
 let initialPlanets = 0;
+let backgroundOpacity = 220; 
+let root = document.documentElement;
 
 function setup() {
     frameRate(FPS);
@@ -21,7 +23,7 @@ function setup() {
 }
 
 function draw() {
-    background(220);
+    background(backgroundOpacity);
     fill(0);
     for (let i = 0; i < stars.length; i++) {
         fill(255, 255, 0);
@@ -126,5 +128,22 @@ function updateMassSlider() {
     document.getElementById("starMass").innerHTML = `Star Mass: ${document.getElementById("massSlider").value}`;
     for (let i = 0; i < stars.length; i++) {
         stars[i].mass = document.getElementById("massSlider").value;
+    }
+}
+
+function toggleDark(){
+    if(backgroundOpacity == 220){//Check if background is already bright. This tells us which mode we're in
+        backgroundOpacity = 10;//Dark Mode
+        root.style.setProperty('--invertPercent', '100%');
+        root.style.setProperty('--textColor', '#FFFFFF');
+        root.style.setProperty('--sliderColor', '#70ffbf');
+        root.style.setProperty('--sliderThumbColor', '#f870ff');
+    }
+    else{
+        backgroundOpacity = 220;
+        root.style.setProperty('--invertPercent', '0%');
+        root.style.setProperty('--textColor', '#000000');
+        root.style.setProperty('--sliderColor', '#98b8ec');
+        root.style.setProperty('--sliderThumbColor', '#ce9cff');
     }
 }

@@ -7,6 +7,6 @@ class Planet{
         this.pos = !posX ? createVector(width / 2, height / 2 - distFromSun) : createVector(posX, posY);//If no posX and posY given, do radius from sun mode
         this.accel = createVector(0,0);
         this.vel = createVector(0,0);
-        this.colour = [random(255), random(255), random(255)];
+        this.colour = [random(100,255), random(100, 255), random(100, 255)];
     }
 }
