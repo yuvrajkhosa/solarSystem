@@ -8,7 +8,7 @@ const FPS = 60;
 let counter = 0;
 let isStarted = false;
 let initialPlanets = 0;
-let backgroundOpacity = 220; 
+let backgroundOpacity = 20; 
 let root = document.documentElement;
 
 function setup() {
@@ -20,6 +20,7 @@ function setup() {
     stars.push(new Star(width / 2, height / 2, 30, 60));
     updateMassSlider();
     updatePlanetsSlider();
+    toggleDark();
 }
 
 function draw() {
